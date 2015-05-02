@@ -17,6 +17,7 @@ import robotMain.commands.*;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -37,7 +38,12 @@ public class DriveTrain extends Subsystem {
     private final double deadZone = Robot.deadZone;
     private byte leftSyncGroup = 1;
     private byte rightSyncGroup = 0;
-    private boolean highLow = false;
+    
+    // All of the following are purely for testing information and mostly copies of values to be printed and not modified
+    private double testLeftY;
+    private double testRightY;
+    private double testCubedLeftY;
+    private double testCubedRightY;
     
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -51,6 +57,11 @@ public class DriveTrain extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());
     }
     
+    // Constructs DriveTrain
+    public DriveTrain(){
+    	shifter.set(Value.kReverse); // Initializes in low gear
+    }
+    
     /***************************************
      * 
      * Method to scale a joystick value.
@@ -58,8 +69,7 @@ public class DriveTrain extends Subsystem {
      *
      ***************************************/
     private double cubicScale(double arg){
-    	double a = (cubicConstant*arg + (1-cubicConstant)*Math.pow((double)arg, 3));
-    	return a;
+    	return (cubicConstant*arg + (1-cubicConstant)*Math.pow((double)arg, 3));
     }
     
     /*************************************************
@@ -71,9 +81,16 @@ public class DriveTrain extends Subsystem {
      *    
      *************************************************/
     public void move(double leftY, double rightY){
+    	
+    	//testing stuff
+    	testLeftY = leftY;
+    	testCubedLeftY = cubicScale(leftY);
+    	testRightY = rightY;
+    	testCubedRightY = cubicScale(rightY);
+    	
     	// dead zone check and set
-    	if(leftY <= deadZone) leftY = 0.0;
-    	if(rightY <= deadZone) rightY = 0.0;
+    	if(leftY <= deadZone && leftY >= -deadZone) leftY = 0.0;
+    	if(rightY <= deadZone && rightY >= -deadZone) rightY = 0.0;
     	
     	setMotors(side.LEFT, cubicScale(leftY));
     	setMotors(side.RIGHT, cubicScale(rightY));
@@ -106,14 +123,33 @@ public class DriveTrain extends Subsystem {
     
     // Method to toggle shifting between high and low gear
     public void shiftToggle(){
-    	if(highLow){
+    	if(shifter.get() == Value.kReverse){
     		shifter.set(Value.kForward);
-    		highLow = !highLow;
     	}
     	else{
     		shifter.set(Value.kReverse);
-    		highLow = !highLow;
     	}
+    }
+    
+    public void printTestInfo(){
+    	// Joystick values
+    	SmartDashboard.putNumber("left joystick Y: ", testLeftY);
+    	SmartDashboard.putNumber("right joystick Y: ", testRightY);
+    	SmartDashboard.putNumber("left joystick cubed Y: ", testCubedLeftY);
+    	SmartDashboard.putNumber("left joystick cubed Y: ", testCubedRightY);
+    	
+    	// Motor values
+    	SmartDashboard.putNumber("current leftMotor1 val: ", leftMotor1.get());
+    	SmartDashboard.putNumber("current leftMotor2 val: ", leftMotor2.get());
+    	SmartDashboard.putNumber("current leftMotor3 val: ", leftMotor3.get());
+    	SmartDashboard.putNumber("current rightMotor4 val: ", rightMotor4.get());
+    	SmartDashboard.putNumber("current rightMotor5 val: ", rightMotor5.get());
+    	SmartDashboard.putNumber("current rightMotor6 val: ", rightMotor6.get());
+    	
+    	//Shifter
+    	if(shifter.get() == Value.kForward) SmartDashboard.putString("current gear: ", "HIGH");
+    	else if(shifter.get() == Value.kReverse) SmartDashboard.putString("current gear: ", "LOW");
+    	else SmartDashboard.putString("current gear: ", "kOff <- should never be this value");
     }
     
 }
