@@ -1,0 +1,39 @@
+##################################
+#First Robotics java .gitignore
+#Team 1073
+##################################
+
+#For Robot Builder Temporary Files
+*~
+~*
+
+#Other Various Files & Operating System 
+bin/
+
+build/
+/build/
+\build\
+build\
+
+dist/
+/dist/
+dist\
+\dist\
+
+*.class
+.classpath
+*.classpath
+classpath
+
+#OS related
+.DS_STORE
+.Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.localized
+
+
+
+*.xml
+
+sysProps.xml
