@@ -131,6 +131,7 @@ public class DriveTrain extends Subsystem {
     	}
     }
     
+    // Uses test values and current values to print information to the dashboard while testing
     public void printTestInfo(){
     	// Joystick values
     	SmartDashboard.putNumber("left joystick Y: ", testLeftY);
