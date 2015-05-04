@@ -123,7 +123,8 @@ public class DriveTrain extends Subsystem {
     
     // Method to toggle shifting between high and low gear
     public void shiftToggle(){
-    	if(shifter.get() == Value.kReverse){
+    	// the case of the shifter being kOff should not occur, but accounting for it to be kOff so the robot will still shift
+    	if(shifter.get() == Value.kReverse || shifter.get() == Value.kOff){
     		shifter.set(Value.kForward);
     	}
     	else{
