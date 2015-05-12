@@ -69,7 +69,7 @@ public class DriveTrain extends Subsystem {
      *
      ***************************************/
     private double cubicScale(double arg){
-    	return (cubicConstant*arg + (1-cubicConstant)*Math.pow((double)arg, 3));
+    	return (cubicConstant*arg + (1 - cubicConstant) * Math.pow((double)arg, 3));
     }
     
     /*************************************************
